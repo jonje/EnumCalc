@@ -32,7 +32,7 @@ public class Calculator implements Runnable{
             operator = promptUserAndGetOperator();
             calculatorOperation = getCalcOperation(operator);
 
-            if(number2 != 0) {
+            if(number2 != 0 && operator != '=') {
                total = calculatorOperation.calculate(number2, number1);
                 System.out.println("Sub Total = " + total);
             }
