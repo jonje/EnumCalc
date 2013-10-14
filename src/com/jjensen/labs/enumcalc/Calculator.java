@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class Calculator implements Runnable{
     private Scanner inputReader;
-    private CalculatorEnum calculatorOperation;
+    private CalculatorEnum calculatorOperation, previousOperation;
     private double number1, number2, total;
     private boolean validInput;
     private char operator;
@@ -21,7 +21,7 @@ public class Calculator implements Runnable{
         displayGreeting("Welcome to Simple Calculator \nCreated by: Jonathan Jensen\n");
         do {
             do {
-                number1 = promptUserForNumberGetInt();
+                number1 = promptUserForNumberGetDouble();
                 if(number1 != 0) {
                     validInput = true;
                 } else {
@@ -29,16 +29,23 @@ public class Calculator implements Runnable{
                 }
             } while (!validInput);
 
+            previousOperation = getCalcOperation(operator);
             operator = promptUserAndGetOperator();
             calculatorOperation = getCalcOperation(operator);
 
-            if(number2 != 0 && operator != '=') {
-               total = calculatorOperation.calculate(number2, number1);
-                System.out.println("Sub Total = " + total);
+            if(operator != '='){
+                if(number2 != 0) {
+                    total = calculatorOperation.calculate(number2, number1);
+                    System.out.println("Sub Total = " + total);
+                    number2 = total;
+                } else {
+                    number2 = number1;
+                }
+
+            } else {
+                total = previousOperation.calculate(number2, number1);
+
             }
-
-            number2 = number1;
-
 
         } while(operator != '=');
 
@@ -60,9 +67,9 @@ public class Calculator implements Runnable{
         System.out.println(greeting);
     }
 
-    public int promptUserForNumberGetInt(){
+    public double promptUserForNumberGetDouble(){
         promptUser("Enter number:");
-        return getInt(getUserInput());
+        return getDouble(getUserInput());
     }
 
     private void promptUser(String message) {
@@ -73,11 +80,11 @@ public class Calculator implements Runnable{
         return inputReader.nextLine();
     }
 
-    private int getInt(String input){
+    private double getDouble(String input){
 
-        int result = 0;
+        double result = 0;
         try {
-            result = Integer.parseInt(input);
+            result = Double.parseDouble(input);
         } catch (NumberFormatException numberException) {
             System.out.println("Invalid input.");
 
@@ -107,8 +114,11 @@ public class Calculator implements Runnable{
         }  else if(operator == '*') {
            calculatorOperation = CalculatorEnum.MULTIPLY;
 
-        }   else {
-            calculatorOperation = CalculatorEnum.DIVIDE;
+        }  else if(operator == '/') {
+           calculatorOperation = CalculatorEnum.DIVIDE;
+
+        }  else {
+           calculatorOperation = CalculatorEnum.EQUALS;
         }
 
         return calculatorOperation;

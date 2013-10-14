@@ -35,6 +35,13 @@ public enum CalculatorEnum {
         public double calculate(double num1, double num2) {
             return num1 / num2;
         }
+    },
+
+    EQUALS {
+        @Override
+        public double calculate(double num1, double num2) {
+            return num1;
+        }
     };
 
     public abstract double calculate(double num1, double num2);
